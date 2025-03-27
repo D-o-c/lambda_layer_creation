@@ -1,0 +1,8 @@
+# Ignore all files and directories
+/*
+
+# Except
+!/.gitignore
+!/create_layer.sh
+!/Dockerfile
+!/README.md
