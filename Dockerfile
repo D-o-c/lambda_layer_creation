@@ -16,7 +16,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt -t /opt/python/
 
 # Copy custom libraries into /opt/python/
-COPY custom_libs /opt/python/
+COPY custom_libs/* /opt/python/
 
 # Set the CMD to zip the installed packages into a layer
 # change the `requests-layer` to the LAYER_NAME variable as per create_layer.sh file
