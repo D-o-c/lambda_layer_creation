@@ -7,13 +7,16 @@ WORKDIR /app
 # Install any necessary dependencies
 RUN yum update && \
     yum install -y zip python-pip python3-setuptools && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/cache/yum
 
 # Copy the requirements file to the working directory
 COPY requirements.txt .
 
 # Install the Python packages listed in requirements.txt
 RUN pip install -r requirements.txt -t /opt/python/
+
+# Copy custom libraries into /opt/python/
+COPY custom_libs /opt/python/
 
 # Set the CMD to zip the installed packages into a layer
 # change the `requests-layer` to the LAYER_NAME variable as per create_layer.sh file

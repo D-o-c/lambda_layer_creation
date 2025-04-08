@@ -10,6 +10,7 @@ The project consists of the following files:
 *   `Dockerfile`: Defines the Docker image used to build the Python layer.
 *   `requirements.txt`:  Lists the Python packages to be included in the layer.
 *   `layers/`: (This directory will be created) Where the resulting layer zip file will be stored after the `create_layers.sh` script runs.
+*   `custom_libs/`: A directory where custom libraries can be stored as subfolders.
 
 ## Prerequisites
 
@@ -25,18 +26,28 @@ The project consists of the following files:
     requests==2.31.0
     ```
 
-2.  **Run the `create_layers.sh` script:**
+2.  **Add custom libraries (optional):**
+    Create a subfolder in the `custom_libs` directory for each custom library. For example:
+    ```
+    custom_libs/
+        my_custom_lib/
+            __init__.py
+            my_custom_lib.py
+    ```
+
+3.  **Run the `create_layers.sh` script:**
     Execute the `create_layers.sh` script from your terminal. This script will:
     *   Build a Docker image based on the `Dockerfile`.
     *   Run a container based on the built image.
     *   Install Python packages from `requirements.txt` inside the container.
-    *   Package the installed packages into a zip file stored in the `layers/` directory.
+    *   Add custom libraries from `custom_libs` to the layer.
+    *   Package the installed packages and custom libraries into a zip file stored in the `layers/` directory.
     ```bash
     chmod +x create_layers.sh #Make sure the script is executable
     ./create_layers.sh
     ```
 
-3.  **Using the generated layer (e.g. with the AWS CLI):**
+4.  **Using the generated layer (e.g. with the AWS CLI):**
     After successfully running `create_layers.sh`, a zip file will be created e.g. in the `layers/` directory.  You can then use this zip file when creating or updating your Lambda functions using the AWS Management Console or the AWS CLI.  The AWS CLI command to do so, e.g. (replace AWS_REGION):
     ```bash
     aws lambda create-layer \
@@ -61,11 +72,13 @@ The project consists of the following files:
     *   Installs necessary system packages ( `zip` and `python-pip` and `python3-setuptools`).
     *   Copies `requirements.txt`.
     *   Installs the Python packages into `/opt/python/`. Python lambda layers look for packages there.
+    *   Copies custom libraries from `custom_libs` into `/opt/python/`.
     *   The `CMD` zips the contents of `/opt` (where the python packages are now) into a zip file named as the `LAYER_NAME` with .zip extension in the `/app` directory.  This is the layer that will be used inside our lambda function.
 
 ## Customization
 
 *   **`requirements.txt`**: Add, remove, or update Python packages in this file to match your Lambda function's dependencies.
+*   **`custom_libs/`**: Add custom libraries as subfolders in this directory.
 *   **`LAYER_NAME`**: Change the value of `LAYER_NAME` variable in the `create_layers.sh` script to customize the name of the layer zip file.
 *    **`Dockerfile`**:  The `Dockerfile` can be customized to accommodate the needs you have in your lambda functions (e.g. you can provide additional OS packages)
 

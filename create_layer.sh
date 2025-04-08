@@ -13,7 +13,7 @@ rm -rf $DIRECTORY/layers/*
 docker build -t lambda-layer "$DIRECTORY" --platform linux/amd64
 
 # Run the Docker container to create the layer
-docker run --name lambda-layer-container -v "$DIRECTORY:/app" lambda-layer
+docker run --name lambda-layer-container -v "$DIRECTORY:/app" -v "$DIRECTORY/custom_libs:/app/custom_libs" lambda-layer
 
 # create layers directory, if not created.
 
